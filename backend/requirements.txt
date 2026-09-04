@@ -5,3 +5,5 @@ pydantic
 pypdf
 python-docx
 python-pptx
+
+numpy
