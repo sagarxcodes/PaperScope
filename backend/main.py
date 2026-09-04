@@ -33,6 +33,13 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5175",
         "http://127.0.0.1:5176",
+        # Production frontend is added through the CORS_ORIGINS
+        # environment variable after Vercel deployment.
+        *[
+            origin.strip()
+            for origin in __import__("os").getenv("CORS_ORIGINS", "").split(",")
+            if origin.strip()
+        ],
     ],
     allow_credentials=True,
     allow_methods=["*"],
