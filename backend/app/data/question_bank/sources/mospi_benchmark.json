@@ -1,0 +1,102 @@
+[
+  {
+    "exam": "MoSPI",
+    "year": 2026,
+    "subject": "Official Statistics",
+    "concept": "Official Statistics",
+    "sub_concept": "Sources of Official Statistics",
+    "competency": "Identify and differentiate sources of official statistics",
+    "difficulty": "easy",
+    "question_type": "conceptual",
+    "question": "Which of the following is an important source of official statistics?",
+    "options": [
+      "Sample surveys",
+      "Operating systems",
+      "Network protocols",
+      "Computer games"
+    ],
+    "answer": 0,
+    "explanation": "Sample surveys are an important source of official statistics.",
+    "source": "PaperScope benchmark"
+  },
+  {
+    "exam": "MoSPI",
+    "year": 2026,
+    "subject": "Official Statistics",
+    "concept": "Official Statistics",
+    "sub_concept": "Sources of Official Statistics",
+    "competency": "Identify and differentiate sources of official statistics",
+    "difficulty": "medium",
+    "question_type": "application",
+    "question": "A statistical agency wants to obtain information from records already collected during the routine operation of government services. Which source is most appropriate?",
+    "options": [
+      "Administrative data",
+      "Census",
+      "Sample survey",
+      "Experimental data"
+    ],
+    "answer": 0,
+    "explanation": "Administrative data are generated through routine administrative activities and records.",
+    "source": "PaperScope benchmark"
+  },
+  {
+    "exam": "MoSPI",
+    "year": 2026,
+    "subject": "Official Statistics",
+    "concept": "Data Quality",
+    "sub_concept": "Quality Dimensions",
+    "competency": "Evaluate dimensions of statistical data quality",
+    "difficulty": "easy",
+    "question_type": "conceptual",
+    "question": "Which of the following is a dimension of official statistics quality?",
+    "options": [
+      "Timeliness",
+      "Processor speed",
+      "Screen resolution",
+      "Network bandwidth"
+    ],
+    "answer": 0,
+    "explanation": "Timeliness is one of the important dimensions of statistical quality.",
+    "source": "PaperScope benchmark"
+  },
+  {
+    "exam": "MoSPI",
+    "year": 2026,
+    "subject": "Official Statistics",
+    "concept": "Statistical Processes",
+    "sub_concept": "Data Production",
+    "competency": "Understand the statistical production process",
+    "difficulty": "easy",
+    "question_type": "conceptual",
+    "question": "Which sequence best represents the basic statistical production process described in the material?",
+    "options": [
+      "Collection, processing and dissemination",
+      "Compilation, gaming and networking",
+      "Programming, rendering and deployment",
+      "Encryption, compression and transmission"
+    ],
+    "answer": 0,
+    "explanation": "The material describes collection, processing and dissemination of statistical information.",
+    "source": "PaperScope benchmark"
+  },
+  {
+    "exam": "MoSPI",
+    "year": 2026,
+    "subject": "Official Statistics",
+    "concept": "Applications of Official Statistics",
+    "sub_concept": "Evidence-Based Decision Making",
+    "competency": "Apply official statistics to policy and decision making",
+    "difficulty": "medium",
+    "question_type": "application",
+    "question": "Which situation best demonstrates the use of official statistics for evidence-based decision making?",
+    "options": [
+      "Using statistical evidence to formulate a public policy",
+      "Choosing a computer wallpaper",
+      "Selecting a programming language randomly",
+      "Changing a device password"
+    ],
+    "answer": 0,
+    "explanation": "Official statistics support evidence-based policy formulation and public programme decisions.",
+    "source": "PaperScope benchmark"
+  }
+]

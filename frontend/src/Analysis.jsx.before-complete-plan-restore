@@ -1,0 +1,159 @@
+import { useEffect, useState } from 'react'
+import './Analysis.css'
+
+function Analysis() {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('paperscope_analysis')
+
+    if (saved) {
+      setData(JSON.parse(saved))
+    } else {
+      fetch('http://127.0.0.1:8000/api/demo/analysis')
+        .then((response) => response.json())
+        .then(setData)
+        .catch(console.error)
+    }
+  }, [])
+
+  const competencies =
+    data?.competencies ||
+    data?.competency?.competencies ||
+    []
+
+  const gaps =
+    data?.competency_gaps || []
+
+  const rows = competencies.map((item) => ({
+    topic: item.name || item.competency,
+    score: `${item.score ?? item.accuracy}%`,
+    position: item.level
+      ? item.level.charAt(0).toUpperCase() + item.level.slice(1)
+      : 'Developing',
+    time: '—',
+    gap: (item.score ?? item.accuracy ?? 0) < 60
+      ? 'High'
+      : (item.score ?? item.accuracy ?? 0) < 75
+        ? 'Medium'
+        : 'Low'
+  }))
+
+  return (
+    <main className="analysis-page">
+      <nav className="analysis-nav">
+        <button onClick={() => (window.location.href = '/dashboard')}>
+          ← Back to Dashboard
+        </button>
+        <strong>PaperScope</strong>
+      </nav>
+
+      <section className="analysis-content">
+        <p className="section-label">COMPLETE ANALYSIS</p>
+        <h1>Where You Stand</h1>
+        <p className="analysis-lead">
+          A complete view of your competency, performance,
+          topic gaps and learning priorities.
+        </p>
+
+        <section className="analysis-summary">
+          <div>
+            <span>OVERALL COMPETENCY</span>
+            <strong>68%</strong>
+          </div>
+
+          <div>
+            <span>CONCEPTS IDENTIFIED</span>
+            <strong>{data?.concepts?.length || 5}</strong>
+          </div>
+
+          <div>
+            <span>COMPETENCIES</span>
+            <strong>{competencies.length || 4}</strong>
+          </div>
+
+          <div>
+            <span>HIGH-PRIORITY GAPS</span>
+            <strong>{gaps.filter((g) => g.gap === 'High').length || 1}</strong>
+          </div>
+        </section>
+
+        <section className="analysis-panel">
+          <h2>Competency Performance</h2>
+
+          <p>
+            PaperScope maps learning material into measurable
+            competencies and identifies where targeted intervention
+            is required.
+          </p>
+
+          <div className="analysis-table-wrap">
+            <table className="analysis-table">
+              <thead>
+                <tr>
+                  <th>Competency</th>
+                  <th>Score</th>
+                  <th>Position</th>
+                  <th>Priority</th>
+                  <th>Gap</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.topic}>
+                    <td>{row.topic}</td>
+                    <td>{row.score}</td>
+                    <td>{row.position}</td>
+                    <td>{row.gap === 'High' ? 'Priority' : 'Normal'}</td>
+                    <td>{row.gap}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="analysis-panel">
+          <p className="section-label">COMPETENCY GAPS</p>
+          <h2>Where should you improve?</h2>
+
+          {gaps.map((gap) => (
+            <div key={gap.competency} className="analysis-gap">
+              <h3>
+                {gap.competency} — {gap.score}%
+              </h3>
+              <p>{gap.reason}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="analysis-panel plan-panel">
+          <p className="section-label">NEXT ACTION</p>
+          <h2>Turn your gaps into a learning path.</h2>
+
+          <p>
+            PaperScope prioritizes the weakest competencies,
+            generates targeted practice and connects learners
+            with relevant training.
+          </p>
+
+          <button onClick={() => (window.location.href = '/quiz')}>
+            Start Targeted Assessment →
+          </button>
+
+          <button onClick={() => (window.location.href = '/recommended')}>
+            View iGOT Recommendations →
+          </button>
+        </section>
+      </section>
+
+      <footer className="analysis-footer">
+        <span>PAPERSCOPE — SMART INDIA HACKATHON 2026</span>
+        <span>CONTACT US · contact@paperscope.in</span>
+      </footer>
+    </main>
+  )
+}
+
+export default Analysis

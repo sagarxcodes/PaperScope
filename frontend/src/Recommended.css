@@ -1,0 +1,263 @@
+.recommended-page {
+  min-height: 100vh;
+  background: #f5f1e8;
+  color: #171717 !important;
+}
+
+.recommended-nav {
+  height: 78px;
+  padding: 0 7%;
+  border-bottom: 1px solid #d5d0c5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recommended-nav button {
+  border: 0;
+  background: transparent;
+  color: #171717 !important;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.recommended-nav strong {
+  font-size: 20px;
+}
+
+.recommended-content {
+  max-width: 1250px;
+  margin: auto;
+  padding: 65px 7% 90px;
+}
+
+.section-label {
+  color: #d62828;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.recommended-content h1 {
+  margin-top: 12px;
+  font-size: clamp(45px, 6vw, 76px);
+  letter-spacing: -4px;
+}
+
+.recommended-lead {
+  max-width: 700px;
+  margin-top: 18px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.course-list {
+  margin-top: 45px;
+  display: grid;
+  gap: 17px;
+}
+
+.course-card {
+  padding: 30px;
+  border-radius: 20px;
+  background: #eee8da;
+  border: 1px solid #d5d0c5;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 35px;
+}
+
+.course-score {
+  padding-right: 30px;
+  border-right: 1px solid #cec7ba;
+}
+
+.course-score span,
+.course-score small {
+  display: block;
+  color: #777;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+}
+
+.course-score strong {
+  display: block;
+  margin: 8px 0;
+  color: #d62828;
+  font-size: 48px;
+}
+
+.course-info h2 {
+  margin-top: 8px;
+  font-size: 27px;
+}
+
+.course-info > p:last-of-type {
+  margin-top: 9px;
+  color: #666;
+  line-height: 1.55;
+}
+
+.course-label {
+  color: #d62828;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.course-actions {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.course-actions button {
+  border: 0;
+  border-radius: 100px;
+  background: #171717;
+  color: #f5f1e8;
+  padding: 12px 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.course-actions a {
+  color: #d62828;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.recommended-footer {
+  background: #11100f;
+  color: #f5f1e8;
+  padding: 35px 7%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+@media(max-width:700px) {
+  .course-card {
+    grid-template-columns: 1fr;
+  }
+
+  .course-score {
+    border-right: 0;
+    border-bottom: 1px solid #cec7ba;
+    padding: 0 0 20px;
+  }
+
+  .recommended-footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+
+/* Final PaperScope typography + no crystal-white text */
+.recommended-nav button,
+.recommended-nav strong,
+.recommended-content h1,
+.course-info h2,
+.course-score span,
+.course-score small {
+  color: #171717 !important;
+}
+
+.recommended-content h1 {
+  font-size: clamp(48px, 6vw, 82px);
+  font-weight: 900;
+}
+
+.recommended-content .section-label,
+.course-label {
+  color: #c92525 !important;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.recommended-lead,
+.course-info > p:last-of-type {
+  color: #4f4a43 !important;
+  font-size: 15px;
+}
+
+.course-info h2 {
+  font-size: 31px;
+  font-weight: 900;
+}
+
+.course-score strong {
+  color: #c92525 !important;
+  font-size: 55px;
+}
+
+.course-actions button {
+  color: #f3eee4 !important;
+}
+
+.course-actions a {
+  color: #c92525 !important;
+  font-size: 14px;
+}
+
+.recommended-footer {
+  position: relative;
+  min-height: 170px;
+  padding: 32px 7% 58px;
+  background: #0d0c0b !important;
+  color: #e7dfd1 !important;
+}
+
+.recommended-footer::before {
+  content: "“Strong learning begins when weakness becomes visible.”";
+  position: absolute;
+  left: 7%;
+  top: 30px;
+  color: #e7dfd1;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.recommended-footer::after {
+  content: "PaperScope — An AI-powered competency intelligence platform for Smart India Hackathon 2026.";
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 15px;
+  color: #9d968c;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+
+@media(max-width:700px) {
+  .recommended-content h1 {
+    font-size: 48px;
+  }
+
+  .recommended-footer {
+    min-height: 230px;
+    padding: 85px 5% 60px;
+  }
+
+  .recommended-footer::before {
+    left: 5%;
+    top: 25px;
+  }
+
+  .recommended-footer::after {
+    left: 5%;
+    right: 5%;
+    text-align: left;
+  }
+}

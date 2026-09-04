@@ -1,0 +1,417 @@
+import { useEffect, useState } from 'react'
+import './Quiz.css'
+
+const API = 'http://127.0.0.1:8000'
+
+function Quiz() {
+  const [questions, setQuestions] = useState([])
+  const [current, setCurrent] = useState(0)
+  const [selected, setSelected] = useState(null)
+  const [results, setResults] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [finished, setFinished] = useState(false)
+  const [activeAnalysis, setActiveAnalysis] = useState(null)
+  const [topicPerformance, setTopicPerformance] = useState({})
+  const [adaptivePlan, setAdaptivePlan] = useState(null)
+
+  useEffect(() => {
+    const loadQuiz = async () => {
+      try {
+        const savedAnalysis =
+          localStorage.getItem('paperscope_active_analysis')
+
+        const parsedAnalysis = savedAnalysis
+          ? JSON.parse(savedAnalysis)
+          : null
+
+        setActiveAnalysis(parsedAnalysis)
+
+        // For now retain the existing backend quiz generator,
+        // but use the active PaperScope material to determine
+        // the topic/concept shown to the learner.
+        const stored = JSON.parse(
+          localStorage.getItem('paperscopeAnalysis') || 'null'
+        )
+
+        const text =
+          stored?.material?.text ||
+          stored?.text ||
+          localStorage.getItem('paperscopeMaterialText') ||
+          ''
+
+        if (!text.trim()) {
+          throw new Error(
+            'No analysed learning material found. Please upload a file from the Dashboard.'
+          )
+        }
+
+        const response = await fetch(`${API}/api/questions/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text,
+            number: 10,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to generate quiz')
+        }
+
+        const data = await response.json()
+
+        const detectedTopics =
+          parsedAnalysis?.topics || []
+
+        const detectedConcepts =
+          parsedAnalysis?.concept_analysis?.concepts || []
+
+        const primaryTopic =
+          detectedTopics[0]?.topic ||
+          'PaperScope Learning Material'
+
+        const primaryConcept =
+          detectedConcepts[0]?.concept ||
+          'Core Concepts'
+
+        const convertedQuestions = data.questions.map((q) => ({
+          ...q,
+          topic: q.topic || primaryTopic,
+          concept: q.concept || primaryConcept,
+          difficulty: q.difficulty || 'medium',
+          answer:
+            typeof q.answer === 'number'
+              ? q.answer
+              : q.options.indexOf(q.answer)
+        }))
+
+        setQuestions(convertedQuestions)
+      } catch (err) {
+        console.error(err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadQuiz()
+  }, [])
+
+  const submitAnswer = () => {
+    if (selected === null) return
+
+    const question = questions[current]
+    const correct = selected === question.answer
+
+    const updatedResults = [
+      ...results,
+      {
+        question_id: question.id,
+        topic: question.topic,
+        concept: question.concept,
+        selected,
+        correct,
+      },
+    ]
+
+    const topic = question.topic || 'General'
+
+    setTopicPerformance((previous) => {
+      const currentStats = previous[topic] || {
+        questions: 0,
+        correct: 0,
+        wrong: 0,
+      }
+
+      return {
+        ...previous,
+        [topic]: {
+          questions: currentStats.questions + 1,
+          correct: currentStats.correct + (correct ? 1 : 0),
+          wrong: currentStats.wrong + (correct ? 0 : 1),
+        },
+      }
+    })
+
+    setResults(updatedResults)
+    setSelected(null)
+
+    if (current + 1 >= questions.length) {
+      const finalTopicPerformance = {
+        ...topicPerformance,
+        [topic]: {
+          questions:
+            (topicPerformance[topic]?.questions || 0) + 1,
+          correct:
+            (topicPerformance[topic]?.correct || 0) +
+            (correct ? 1 : 0),
+          wrong:
+            (topicPerformance[topic]?.wrong || 0) +
+            (correct ? 0 : 1),
+        },
+      }
+
+      Object.keys(finalTopicPerformance).forEach((topicName) => {
+        const stats = finalTopicPerformance[topicName]
+        stats.accuracy = stats.questions
+          ? Math.round((stats.correct / stats.questions) * 100)
+          : 0
+      })
+
+      const finalCorrectAnswers =
+        updatedResults.filter((item) => item.correct).length
+
+      const finalAccuracy =
+        updatedResults.length > 0
+          ? Math.round(
+              (finalCorrectAnswers / updatedResults.length) * 100
+            )
+          : 0
+
+      setTopicPerformance(finalTopicPerformance)
+
+      localStorage.setItem(
+        'paperscope_quiz_results',
+        JSON.stringify(updatedResults)
+      )
+
+      localStorage.setItem(
+        'paperscope_topic_performance',
+        JSON.stringify(finalTopicPerformance)
+      )
+
+      // Send the learner's actual performance to
+      // PaperScope Adaptive Intelligence.
+      fetch(`${API}/api/adaptive/plan`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic_performance: finalTopicPerformance,
+          overall_accuracy: finalAccuracy,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Adaptive Intelligence unavailable')
+          }
+
+          return response.json()
+        })
+        .then((plan) => {
+          setAdaptivePlan(plan)
+
+          localStorage.setItem(
+            'paperscope_adaptive_plan',
+            JSON.stringify(plan)
+          )
+        })
+        .catch((err) => {
+          console.error('Adaptive Intelligence:', err)
+        })
+        .finally(() => {
+          setFinished(true)
+        })
+
+      return
+    }
+
+    setCurrent((previous) => previous + 1)
+  }
+
+  if (loading) {
+    return (
+      <main className="quiz-page">
+        <section className="quiz-result">
+          <p className="section-label">
+            PAPERSCOPE INTELLIGENCE ENGINE
+          </p>
+
+          <h1>
+            Generating your adaptive assessment...
+          </h1>
+
+          <p>
+            PaperScope is analysing your competency profile and
+            generating targeted questions.
+          </p>
+        </section>
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className="quiz-page">
+        <section className="quiz-result">
+          <p className="section-label">
+            QUIZ GENERATION ERROR
+          </p>
+
+          <h1>
+            Unable to generate assessment.
+          </h1>
+
+          <p>{error}</p>
+
+          <button onClick={() => window.location.reload()}>
+            Try Again →
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (finished) {
+    const correctAnswers = results.filter(
+      (item) => item.correct
+    ).length
+
+    const accuracy = Math.round(
+      (correctAnswers / results.length) * 100
+    )
+
+    return (
+      <main className="quiz-page">
+        <section className="quiz-result">
+
+          <p className="section-label">
+            ADAPTIVE ASSESSMENT COMPLETE
+          </p>
+
+          <h1>
+            Your performance has been mapped.
+          </h1>
+
+          <strong className="quiz-score">
+            {correctAnswers}/{results.length}
+          </strong>
+
+          <p>
+            Accuracy: {accuracy}%
+          </p>
+
+          <p>
+            PaperScope identified your stronger and weaker
+            competency areas from your responses.
+          </p>
+
+          {adaptivePlan?.focus_topic && (
+            <p>
+              Adaptive focus: <strong>{adaptivePlan.focus_topic}</strong>
+              {' '}— {adaptivePlan.recommended_difficulty} practice
+            </p>
+          )}
+
+          <div className="result-actions">
+            <button onClick={() => (window.location.href = '/analysis')}>
+              View Complete Analysis →
+            </button>
+
+            <button onClick={() => (window.location.href = '/recommended')}>
+              View Recommended Learning →
+            </button>
+
+            <button onClick={() => (window.location.href = '/dashboard')}>
+              Return to Dashboard
+            </button>
+          </div>
+
+        </section>
+      </main>
+    )
+  }
+
+  const question = questions[current]
+
+  return (
+    <main className="quiz-page">
+
+      <nav className="quiz-nav">
+        <button onClick={() => (window.location.href = '/dashboard')}>
+          ← Dashboard
+        </button>
+
+        <strong>PaperScope</strong>
+
+        <span>ADAPTIVE QUIZ</span>
+      </nav>
+
+      <section className="quiz-container">
+
+        <div className="quiz-progress">
+
+          <span>
+            CURRENT COMPETENCY
+          </span>
+
+          <strong>
+            {question.topic}
+          </strong>
+
+          <small>
+            Question {current + 1} of {questions.length}
+          </small>
+
+        </div>
+
+        <article className="question-card">
+
+          <p className="question-number">
+            QUESTION {current + 1}
+          </p>
+
+          <p className="section-label">
+            {question.difficulty.toUpperCase()} • {question.concept}
+          </p>
+
+          <h1>
+            {question.question}
+          </h1>
+
+          <div className="options">
+
+            {question.options.map((option, index) => (
+              <button
+                key={`${question.id}-${index}`}
+                className={selected === index ? 'selected' : ''}
+                onClick={() => setSelected(index)}
+              >
+                <span>
+                  {String.fromCharCode(65 + index)}
+                </span>
+
+                {option}
+              </button>
+            ))}
+
+          </div>
+
+          <button
+            className="submit-answer"
+            onClick={submitAnswer}
+            disabled={selected === null}
+          >
+            {current + 1 === questions.length
+              ? 'Finish Assessment →'
+              : 'Submit Answer →'}
+          </button>
+
+        </article>
+
+        <p className="adaptive-note">
+          PaperScope dynamically analyses competency,
+          concept and difficulty progression.
+        </p>
+
+      </section>
+
+    </main>
+  )
+}
+
+export default Quiz

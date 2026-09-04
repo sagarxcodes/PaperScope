@@ -1,0 +1,36 @@
+{
+  "sources": [
+    {
+      "exam_id": "JEE_MAIN",
+      "name": "Joint Entrance Examination (Main)",
+      "authority": "National Testing Agency",
+      "official_source": "https://jeemain.nta.nic.in/",
+      "bulletin_source": "https://jeemain.nta.nic.in/information-bulletin/",
+      "syllabus_source": "https://jeemain.nta.nic.in/document/syllabus-2026/",
+      "current_version": "2026",
+      "source_type": "official",
+      "status": "active"
+    },
+    {
+      "exam_id": "NEET_UG",
+      "name": "National Eligibility cum Entrance Test (UG)",
+      "authority": "National Testing Agency",
+      "official_source": "https://neet.nta.nic.in/",
+      "bulletin_source": "https://neet.nta.nic.in/documents/",
+      "syllabus_source": "https://neet.nta.nic.in/documents/",
+      "current_version": "2026",
+      "source_type": "official",
+      "status": "active"
+    },
+    {
+      "exam_id": "UPSC_CSE_PRELIMS",
+      "name": "Civil Services (Preliminary) Examination",
+      "authority": "Union Public Service Commission",
+      "official_source": "https://www.upsc.gov.in/",
+      "notification_source": "https://www.upsc.gov.in/examinations/Civil%20Services%20%28Preliminary%29%20Examination%2C%202026",
+      "current_version": "2026",
+      "source_type": "official",
+      "status": "active"
+    }
+  ]
+}

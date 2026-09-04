@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+
+backend_backup_2026-09-01/
+*.backup
+*.bak
+
+.DS_Store

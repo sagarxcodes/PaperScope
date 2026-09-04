@@ -1,0 +1,76 @@
+[
+  {
+    "id": "COMP001",
+    "subject": "Official Statistics",
+    "concept": "Official Statistics",
+    "sub_concept": "Sources of Official Statistics",
+    "competency": "Identify and differentiate sources of official statistics",
+    "skills": [
+      "Source identification",
+      "Source classification",
+      "Source comparison"
+    ],
+    "description": "Ability to identify, classify and distinguish major sources used to produce official statistics.",
+    "difficulty_levels": [
+      "easy",
+      "medium",
+      "hard"
+    ]
+  },
+  {
+    "id": "COMP002",
+    "subject": "Official Statistics",
+    "concept": "Data Quality",
+    "sub_concept": "Quality Dimensions",
+    "competency": "Evaluate dimensions of statistical data quality",
+    "skills": [
+      "Accuracy assessment",
+      "Reliability assessment",
+      "Relevance assessment",
+      "Timeliness assessment",
+      "Accessibility assessment"
+    ],
+    "description": "Ability to understand and evaluate the major dimensions that determine the quality of official statistics.",
+    "difficulty_levels": [
+      "easy",
+      "medium",
+      "hard"
+    ]
+  },
+  {
+    "id": "COMP003",
+    "subject": "Official Statistics",
+    "concept": "Statistical Processes",
+    "sub_concept": "Data Production",
+    "competency": "Understand the statistical production process",
+    "skills": [
+      "Data collection",
+      "Data processing",
+      "Data dissemination"
+    ],
+    "description": "Ability to understand how statistical information is collected, processed and disseminated.",
+    "difficulty_levels": [
+      "easy",
+      "medium",
+      "hard"
+    ]
+  },
+  {
+    "id": "COMP004",
+    "subject": "Official Statistics",
+    "concept": "Applications of Official Statistics",
+    "sub_concept": "Evidence-Based Decision Making",
+    "competency": "Apply official statistics to policy and decision making",
+    "skills": [
+      "Policy formulation",
+      "Development monitoring",
+      "Programme evaluation",
+      "Evidence-based decision making"
+    ],
+    "description": "Ability to apply official statistics to real-world government decision-making and programme evaluation.",
+    "difficulty_levels": [
+      "medium",
+      "hard"
+    ]
+  }
+]

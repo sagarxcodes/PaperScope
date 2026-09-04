@@ -1,0 +1,941 @@
+import { useEffect, useRef, useState } from 'react'
+import './Dashboard.css'
+
+const API = 'http://127.0.0.1:8000'
+
+function Dashboard() {
+  const fileInputRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [materialType, setMaterialType] = useState('auto')
+  const [loading, setLoading] = useState(false)
+  const [analysis, setAnalysis] = useState(null)
+  const [error, setError] = useState('')
+
+  // Restore the active PaperScope learning session.
+  // This keeps the analysed material available while navigating.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('paperscope_active_analysis')
+      if (saved) {
+        setAnalysis(JSON.parse(saved))
+      }
+    } catch {
+      localStorage.removeItem('paperscope_active_analysis')
+    }
+  }, [])
+
+  const user = JSON.parse(
+    localStorage.getItem('paperscopeUser') || 'null'
+  )
+
+  const name = user?.name || 'Learner'
+
+  const go = (path) => {
+    window.location.href = path
+  }
+
+  const analyseMaterial = async () => {
+    if (!selectedFile) {
+      await loadDemoAnalysis()
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    try {
+      // Send the actual file to PaperScope Material Intelligence.
+      // The backend extracts PDF/DOCX/PPTX/TXT correctly.
+      const formData = new FormData()
+      formData.append('file', selectedFile)
+
+      const response = await fetch(`${API}/api/material/analyze`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(
+          message || 'Material analysis unavailable'
+        )
+      }
+
+      const material = await response.json()
+
+      // Persist the latest analysed material for PaperScope Quiz.
+      localStorage.setItem(
+        'paperscopeMaterialText',
+        material.text || ''
+      )
+
+      localStorage.setItem(
+        'paperscopeAnalysis',
+        JSON.stringify(material)
+      )
+
+      if (!material.success) {
+        throw new Error(
+          material.error || 'Unable to analyse material'
+        )
+      }
+
+      // Material Intelligence is now the source of truth.
+      const nextAnalysis = {
+        material,
+        classification: material.classification,
+        topics: material.topics || [],
+        concept_analysis: material.concept_analysis || {},
+        key_concepts: material.key_concepts || [],
+        learning_signals: material.learning_signals || {},
+      }
+
+      setAnalysis(nextAnalysis)
+
+      // Keep the active analysis available across dashboard/quiz/
+      // recommendation navigation.
+      localStorage.setItem(
+        'paperscope_active_analysis',
+        JSON.stringify(nextAnalysis)
+      )
+
+      localStorage.setItem(
+        'paperscope_active_material_name',
+        selectedFile.name
+      )
+    } catch (err) {
+      setError(
+        err.message ||
+        'Unable to connect to PaperScope Material Intelligence'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const materialData = analysis?.material || analysis || {}
+  const topics = analysis?.topics || materialData?.topics || []
+  const concepts =
+    analysis?.concept_analysis?.concepts ||
+    materialData?.concept_analysis?.concepts ||
+    []
+  const classification =
+    analysis?.classification ||
+    materialData?.classification ||
+    {}
+
+  const detectedMaterialType =
+    classification?.material_type || 'general'
+
+  const estimatedComplexity =
+    materialData?.material?.estimated_complexity ||
+    materialData?.estimated_complexity ||
+    'unknown'
+
+  const totalConceptWeightage = concepts.reduce(
+    (sum, item) => sum + Number(item.weightage || 0),
+    0
+  )
+
+  const topConcepts = [...concepts]
+    .sort(
+      (a, b) =>
+        Number(b.weightage || b.importance || 0) -
+        Number(a.weightage || a.importance || 0)
+    )
+    .slice(0, 4)
+
+  const topicCount = topics.length
+  const conceptCount =
+    analysis?.key_concepts?.length ||
+    materialData?.key_concepts?.length ||
+    concepts.length
+
+  // ------------------------------------------------------------
+  // Dynamic competency distribution
+  // ------------------------------------------------------------
+  const competencyItems =
+    analysis?.competencies ||
+    analysis?.assessment?.competencies ||
+    materialData?.competencies ||
+    []
+
+  const strongCount = competencyItems.filter(
+    (item) =>
+      String(item.level || '').toLowerCase() === 'strong' ||
+      Number(item.accuracy || item.score || 0) >= 75
+  ).length
+
+  const developingCount = competencyItems.filter(
+    (item) => {
+      const score = Number(item.accuracy || item.score || 0)
+      return (
+        String(item.level || '').toLowerCase() === 'developing' ||
+        (score >= 50 && score < 75)
+      )
+    }
+  ).length
+
+  const gapCount = competencyItems.filter(
+    (item) => {
+      const score = Number(item.accuracy || item.score || 0)
+      return (
+        String(item.level || '').toLowerCase() === 'weak' ||
+        score < 50
+      )
+    }
+  ).length
+
+  const competencyTotal =
+    strongCount + developingCount + gapCount
+
+  const strongPct = competencyTotal
+    ? Math.round((strongCount / competencyTotal) * 100)
+    : 0
+
+  const developingPct = competencyTotal
+    ? Math.round((developingCount / competencyTotal) * 100)
+    : 0
+
+  const gapPct = competencyTotal
+    ? Math.max(0, 100 - strongPct - developingPct)
+    : 0
+
+  const overallAccuracy =
+    Number(
+      analysis?.assessment?.accuracy ??
+      analysis?.overall_accuracy ??
+      materialData?.assessment?.accuracy ??
+      0
+    )
+
+  const readiness =
+    analysis?.assessment?.readiness || 'NOT ASSESSED'
+
+  const assessmentAccuracy =
+    analysis?.assessment?.accuracy
+
+  const hasAssessment =
+    typeof assessmentAccuracy === 'number'
+
+  const competencyGapItems =
+    analysis?.competency?.competency_gaps ||
+    analysis?.competency?.competencies ||
+    []
+
+  const difficulty =
+    analysis?.assessment?.difficulty_distribution || {}
+
+  const difficultyEntries = [
+    ['Easy', Number(difficulty.easy || 0)],
+    ['Medium', Number(difficulty.medium || 0)],
+    ['Hard', Number(difficulty.hard || 0)],
+  ]
+
+  return (
+    <main className="dashboard-page">
+
+      <nav className="dashboard-nav">
+        <div className="dashboard-brand">
+          <span className="brand-logo">P</span>
+          <span>PaperScope</span>
+        </div>
+
+        <div className="dashboard-nav-right">
+          <span className="dashboard-status">
+            AI-POWERED COMPETENCY INTELLIGENCE
+          </span>
+
+          <button
+            onClick={() => {
+              localStorage.removeItem('paperscopeLoggedIn')
+              localStorage.removeItem('paperscopeUser')
+              window.location.href = '/'
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+
+      <section className="dashboard-content">
+
+        <header className="dashboard-welcome">
+          <p className="dashboard-eyebrow">
+            PAPERSCOPE LEARNING INTELLIGENCE
+          </p>
+
+          <h1>Welcome, {name}.</h1>
+
+          <div className="learning-profile">
+            <span>LEARNING PROFILE</span>
+            <strong>
+              Official Statistics &amp; Data Analyst
+            </strong>
+          </div>
+        </header>
+
+        <section className="upload-section">
+
+          <div className="section-heading">
+            <div>
+              <p className="section-label">LEARNING MATERIAL</p>
+              <h2>Upload Learning Material</h2>
+            </div>
+          </div>
+
+          <div className="upload-workspace">
+
+            <div className="upload-box">
+
+              <div className="upload-icon">+</div>
+
+              <h3>Drop your learning material here</h3>
+
+              <p>
+                Upload notes, lectures, PDFs, presentations or question
+                papers for PaperScope to understand.
+              </p>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden-file-input"
+                accept=".pdf,.doc,.docx,.txt,.ppt,.pptx,.jpeg,.jpg,.png"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    setSelectedFile(file)
+                    setAnalysis(null)
+                    setError('')
+                  }
+                }}
+              />
+
+              <button
+                className="upload-button"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Choose Material
+              </button>
+
+              {selectedFile && (
+                <div className="selected-file">
+                  <strong>Selected:</strong> {selectedFile.name}
+                </div>
+              )}
+
+              <button
+                className="red-button analyse-button"
+                type="button"
+                onClick={analyseMaterial}
+                disabled={loading}
+              >
+                {loading
+                  ? 'PaperScope is analysing...'
+                  : 'Analyse with PaperScope →'}
+              </button>
+
+              <small>
+                Supported: PDF, DOC, DOCX, TXT, PPT, PPTX, JPEG, JPG, PNG
+              </small>
+
+            </div>
+
+            <aside className="material-type-panel">
+
+              <p className="material-type-label">
+                MATERIAL CONTEXT
+              </p>
+
+              <h3>What are you uploading?</h3>
+
+              <p className="material-type-description">
+                Tell PaperScope what this material is so it can apply
+                the most relevant intelligence.
+              </p>
+
+              <div className="material-type-options">
+
+                {[
+                  {
+                    value: 'pyq',
+                    title: 'PYQ',
+                    description: 'Previous year questions & exam trends',
+                  },
+                  {
+                    value: 'question_bank',
+                    title: 'Question Bank',
+                    description: 'Practice questions & difficulty',
+                  },
+                  {
+                    value: 'notes',
+                    title: 'Notes',
+                    description: 'Concepts, gaps & MCQ generation',
+                  },
+                  {
+                    value: 'lecture',
+                    title: 'Lecture',
+                    description: 'Learning objectives & revision',
+                  },
+                  {
+                    value: 'other',
+                    title: 'Other',
+                    description: 'Let PaperScope determine the context',
+                  },
+                ].map((item) => (
+                  <label
+                    key={item.value}
+                    className={
+                      materialType === item.value ? 'active' : ''
+                    }
+                  >
+                    <input
+                      type="radio"
+                      name="materialType"
+                      value={item.value}
+                      checked={materialType === item.value}
+                      onChange={(e) => setMaterialType(e.target.value)}
+                    />
+
+                    <span>
+                      <strong>{item.title}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                  </label>
+                ))}
+
+              </div>
+
+            </aside>
+
+          </div>
+
+          {error && (
+            <div className="analysis-statement error-box">
+              {error}
+            </div>
+          )}
+
+          {!analysis && !error && (
+            <div className="analysis-statement">
+              <strong>
+                PaperScope analyses concepts, competencies, difficulty,
+                importance, competency gaps and learning requirements.
+              </strong>
+            </div>
+          )}
+
+        </section>
+
+        {analysis && (
+          <>
+
+            <section className="stand-section">
+
+              <div>
+                <p className="section-label">WHERE YOU STAND</p>
+
+                <h2>
+                  Your current capability,
+                  <br />
+                  understood by PaperScope.
+                </h2>
+
+                <p>
+                  PaperScope has evaluated the uploaded material and
+                  mapped your learning intelligence.
+                </p>
+              </div>
+
+              <div className="stand-metrics">
+                <div>
+                  <strong>
+                    {hasAssessment
+                      ? `${Math.round(assessmentAccuracy)}%`
+                      : '—'}
+                  </strong>
+                  <span>
+                    {hasAssessment
+                      ? 'ASSESSMENT ACCURACY'
+                      : 'CAPACITY — NOT ASSESSED'}
+                  </span>
+                </div>
+
+                <div>
+                  <strong>{topicCount}</strong>
+                  <span>TOPICS DETECTED</span>
+                </div>
+
+                <div>
+                  <strong>
+                    {hasAssessment ? readiness : 'NOT ASSESSED'}
+                  </strong>
+                  <span>LEARNER READINESS</span>
+                </div>
+              </div>
+
+            </section>
+
+            <section className="dashboard-actions">
+
+              <button
+                className="red-button"
+                onClick={() => go('/analysis')}
+              >
+                View Complete Analysis →
+              </button>
+
+              <button
+                className="outline-button"
+                onClick={() => go('/quiz')}
+              >
+                Start Adaptive Learning →
+              </button>
+
+              <button
+                className="outline-button"
+                onClick={() => go('/recommended')}
+              >
+                View Learning Recommendations →
+              </button>
+
+            </section>
+
+            <section className="intelligence-grid">
+
+              <article className="intelligence-card">
+
+                <p className="section-label">
+                  COMPETENCY INTELLIGENCE
+                </p>
+
+                <h2>Competency distribution</h2>
+
+                <div className="donut-wrap">
+                  <div
+                    className="donut"
+                    style={{
+                      background: `conic-gradient(
+                        #151515 0 ${strongPct}%,
+                        #77716a ${strongPct}% ${strongPct + developingPct}%,
+                        #d52f27 ${strongPct + developingPct}% 100%
+                      )`
+                    }}
+                  >
+                    <div>
+                      <strong>{overallAccuracy}%</strong>
+                      <span>Overall</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="legend">
+                  {hasAssessment ? (
+                    <>
+                      <span>
+                        <i className="legend-strong" />
+                        Strong · {strongPct}%
+                      </span>
+                      <span>
+                        <i className="legend-developing" />
+                        Developing · {developingPct}%
+                      </span>
+                      <span>
+                        <i className="legend-gap" />
+                        Needs Improvement · {gapPct}%
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span>
+                        <i className="legend-strong" />
+                        Assessment required
+                      </span>
+                      <span>
+                        <i className="legend-developing" />
+                        {topicCount} topics detected
+                      </span>
+                      <span>
+                        <i className="legend-gap" />
+                        {conceptCount} concepts detected
+                      </span>
+                    </>
+                  )}
+                </div>
+
+              </article>
+
+              <article className="intelligence-card">
+
+                <p className="section-label">
+                  CONCEPT WEIGHTAGE
+                </p>
+
+                <h2>What matters most?</h2>
+
+                <div className="weightage-list">
+
+                  {topConcepts.length > 0 ? (
+                    topConcepts.map((item) => {
+                      const value = Math.min(
+                        100,
+                        Math.max(
+                          0,
+                          Number(item.weightage || item.importance || 0)
+                        )
+                      )
+
+                      return (
+                        <div key={item.concept}>
+                          <span>{item.concept}</span>
+                          <strong>{value.toFixed(1)}%</strong>
+                          <div>
+                            <i style={{ width: `${value}%` }} />
+                          </div>
+                        </div>
+                      )
+                    })
+                  ) : (
+                    <div>
+                      <span>No concepts detected yet</span>
+                      <strong>—</strong>
+                      <div><i style={{ width: '0%' }} /></div>
+                    </div>
+                  )}
+
+                </div>
+
+              </article>
+
+              <article className="intelligence-card">
+
+                <p className="section-label">
+                  QUESTION INTELLIGENCE
+                </p>
+
+                <h2>Difficulty distribution</h2>
+
+                <div className="difficulty-bars">
+
+                  {difficultyEntries.map(([label, value]) => (
+                    <div key={label}>
+                      <span>{label}</span>
+                      <i style={{ width: `${Math.min(value, 100)}%` }} />
+                      <strong>{value ? `${value}%` : '—'}</strong>
+                    </div>
+                  ))}
+
+                </div>
+
+                <p className="intelligence-note">
+                  {hasAssessment
+                    ? 'Difficulty is based on the generated assessment.'
+                    : `Detected material complexity: ${estimatedComplexity}. Question difficulty will appear after assessment generation.`}
+                </p>
+
+              </article>
+
+            </section>
+
+            <section className="competency-section">
+
+              <div className="section-heading">
+                <div>
+                  <p className="section-label">
+                    COMPETENCY INTELLIGENCE
+                  </p>
+
+                  <h2>Strengths &amp; competency gaps</h2>
+                </div>
+              </div>
+
+              <div className="competency-grid">
+
+                {competencyItems.length > 0 ? (
+                  competencyItems.map((item, index) => {
+                    const score = Number(
+                      item.score ??
+                      item.accuracy ??
+                      item.competency_score ??
+                      0
+                    )
+
+                    const safeScore = Math.min(
+                      100,
+                      Math.max(0, score)
+                    )
+
+                    const level =
+                      safeScore >= 75
+                        ? 'STRONG'
+                        : safeScore >= 50
+                          ? 'DEVELOPING'
+                          : 'HIGH PRIORITY GAP'
+
+                    return (
+                      <article
+                        className={`competency-card ${
+                          safeScore >= 75 ? 'strength' : 'gap'
+                        }`}
+                        key={item.name || item.competency || index}
+                      >
+                        <span>{level}</span>
+
+                        <h3>
+                          {item.name ||
+                            item.competency ||
+                            item.topic ||
+                            `Competency ${index + 1}`}
+                        </h3>
+
+                        <div className="progress">
+                          <div
+                            style={{
+                              width: `${safeScore}%`
+                            }}
+                          />
+                        </div>
+
+                        <strong>{Math.round(safeScore)}%</strong>
+
+                        <p>
+                          {item.description ||
+                            item.message ||
+                            'Learner competency identified from assessment data.'}
+                        </p>
+                      </article>
+                    )
+                  })
+                ) : (
+                  <article className="competency-card">
+                    <span>NOT ASSESSED</span>
+                    <h3>Learner competency</h3>
+                    <div className="progress">
+                      <div style={{ width: '0%' }} />
+                    </div>
+                    <strong>—</strong>
+                    <p>
+                      Complete the generated assessment to let PaperScope
+                      measure strengths and competency gaps.
+                    </p>
+                  </article>
+                )}
+
+              </div>
+
+            </section>
+
+            <section className="gap-section">
+
+              <div>
+                <p className="section-label">ACTIONABLE INTELLIGENCE</p>
+                <h2>What should you improve next?</h2>
+                <p>
+                  PaperScope converts competency gaps into practical
+                  learning actions instead of simply showing a score.
+                </p>
+              </div>
+
+              <div className="gap-list">
+
+                <div>
+                  <span>01</span>
+                  <strong>Data Quality Assessment</strong>
+                  <p>Highest priority competency gap detected.</p>
+                </div>
+
+                <div>
+                  <span>02</span>
+                  <strong>Statistical Interpretation</strong>
+                  <p>Requires additional applied practice.</p>
+                </div>
+
+                <div>
+                  <span>03</span>
+                  <strong>Adaptive Assessment</strong>
+                  <p>Continue targeted questions in weak areas.</p>
+                </div>
+
+              </div>
+
+            </section>
+
+            <section className="personalized-section">
+
+              <p className="section-label">
+                PERSONALIZED LEARNING PLAN
+              </p>
+
+              <h2>
+                Build a plan around your actual capacity.
+              </h2>
+
+              <p>
+                PaperScope prioritizes your weakest competencies while
+                respecting the amount of time you can realistically learn.
+              </p>
+
+              <div className="personalized-cards">
+
+                <div>
+                  <span>01 · LEARN</span>
+                  <strong>Data Quality Assessment</strong>
+                  <small>30 minutes</small>
+                </div>
+
+                <div>
+                  <span>02 · PRACTICE</span>
+                  <strong>Adaptive Questions</strong>
+                  <small>20 minutes</small>
+                </div>
+
+                <div>
+                  <span>03 · REVIEW</span>
+                  <strong>Incorrect Answers</strong>
+                  <small>15 minutes</small>
+                </div>
+
+                <div>
+                  <span>04 · REASSESS</span>
+                  <strong>Competency Check</strong>
+                  <small>15 minutes</small>
+                </div>
+
+              </div>
+
+              <button
+                className="red-button"
+                onClick={() => go('/plan')}
+              >
+                Generate Personalized Plan →
+              </button>
+
+            </section>
+
+            <section className="igot-section">
+
+              <div>
+
+                <p className="section-label">
+                  IGOT KARMAYOGI INTEGRATION
+                </p>
+
+                <h2>
+                  From competency gap
+                  <br />
+                  to the right training.
+                </h2>
+
+                <p>
+                  PaperScope identifies the capability gap first and then
+                  connects the learner with relevant training available
+                  through the iGOT Karmayogi ecosystem.
+                </p>
+
+              </div>
+
+              <div className="igot-courses">
+
+                <article>
+                  <span>HIGH PRIORITY</span>
+                  <h3>Data Quality and Statistical Standards</h3>
+                  <p>
+                    Recommended because Data Quality Assessment is the
+                    highest detected competency gap.
+                  </p>
+
+                  <a
+                    href="https://igotkarmayogi.gov.in/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open iGOT Karmayogi →
+                  </a>
+                </article>
+
+                <article>
+                  <span>FOUNDATION</span>
+                  <h3>Understanding Official Statistics</h3>
+                  <p>
+                    Strengthens foundational understanding and supports
+                    professional capacity building.
+                  </p>
+
+                  <a
+                    href="https://igotkarmayogi.gov.in/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Explore Training →
+                  </a>
+                </article>
+
+              </div>
+
+            </section>
+
+          </>
+        )}
+
+      </section>
+
+      <footer className="site-footer">
+
+        <div className="footer-main">
+
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <span>P</span>
+              <strong>PaperScope</strong>
+            </div>
+
+            <p>
+              AI-powered competency intelligence for personalized
+              learning and capacity building.
+            </p>
+          </div>
+
+          <div className="footer-column">
+            <span>EXPLORE</span>
+            <button onClick={() => go('/dashboard')}>Dashboard</button>
+            <button onClick={() => go('/analysis')}>Analysis</button>
+            <button onClick={() => go('/quiz')}>Adaptive Learning</button>
+            <button onClick={() => go('/recommended')}>Recommendations</button>
+          </div>
+
+          <div className="footer-column">
+            <span>LEARNING</span>
+            <button onClick={() => go('/plan')}>Personalized Plan</button>
+            <a
+              href="https://igotkarmayogi.gov.in/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              iGOT Karmayogi ↗
+            </a>
+          </div>
+
+          <div className="footer-column">
+            <span>CONTACT</span>
+            <a href="mailto:contact@paperscope.in">
+              contact@paperscope.in
+            </a>
+            <small>Smart India Hackathon 2026</small>
+          </div>
+
+        </div>
+
+        <div className="sih-footer">
+          PAPERSCOPE — AI-POWERED COMPETENCY INTELLIGENCE ·
+          SMART INDIA HACKATHON 2026
+        </div>
+
+      </footer>
+
+    </main>
+  )
+}
+
+export default Dashboard

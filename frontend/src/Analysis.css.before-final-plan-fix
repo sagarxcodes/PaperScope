@@ -1,0 +1,510 @@
+.analysis-page {
+  min-height: 100vh;
+  background: #f5f1e8;
+  color: #171717;
+}
+
+.analysis-nav {
+  height: 78px;
+  padding: 0 7%;
+  border-bottom: 1px solid #d5d0c5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.analysis-nav button {
+  border: 0;
+  background: transparent;
+  color: #171717;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.analysis-nav strong {
+  font-size: 20px;
+}
+
+.analysis-content {
+  max-width: 1250px;
+  margin: auto;
+  padding: 65px 7% 90px;
+}
+
+.analysis-content h1 {
+  margin-top: 12px;
+  font-size: clamp(48px, 6vw, 76px);
+  letter-spacing: -4px;
+}
+
+.section-label {
+  color: #d62828;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.analysis-lead {
+  max-width: 680px;
+  margin-top: 18px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.analysis-summary {
+  margin-top: 45px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #171717;
+  color: #f5f1e8;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.analysis-summary div {
+  padding: 28px;
+  border-right: 1px solid #393939;
+}
+
+.analysis-summary div:last-child {
+  border: 0;
+}
+
+.analysis-summary span {
+  display: block;
+  color: #aaa;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.analysis-summary strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 32px;
+}
+
+.analysis-panel {
+  margin-top: 30px;
+  padding: 32px;
+  background: #eee8da;
+  border: 1px solid #d5d0c5;
+  border-radius: 20px;
+}
+
+.analysis-panel h2 {
+  font-size: 28px;
+}
+
+.analysis-panel > p {
+  margin-top: 10px;
+  color: #666;
+  line-height: 1.55;
+}
+
+.analysis-table-wrap {
+  overflow-x: auto;
+  margin-top: 25px;
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analysis-table th,
+.analysis-table td {
+  padding: 15px 10px;
+  border-bottom: 1px solid #cbc4b7;
+  text-align: left;
+  font-size: 12px;
+}
+
+.analysis-table th {
+  color: #777;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.analysis-table td:first-child {
+  font-weight: 800;
+}
+
+.plan-panel h2 {
+  margin-top: 9px;
+}
+
+.plan-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 25px;
+}
+
+.plan-fields label {
+  display: grid;
+  gap: 7px;
+  color: #555;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.plan-fields select {
+  height: 45px;
+  border: 1px solid #c8c1b4;
+  border-radius: 9px;
+  background: #f5f1e8;
+  color: #171717;
+  padding: 0 10px;
+}
+
+.plan-panel button {
+  margin-top: 20px;
+  border: 0;
+  border-radius: 100px;
+  background: #d62828;
+  color: #f5f1e8;
+  padding: 13px 19px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.analysis-footer {
+  background: #11100f;
+  color: #f5f1e8;
+  padding: 35px 7%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+@media(max-width:700px) {
+  .analysis-summary,
+  .plan-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-summary div {
+    border-right: 0;
+    border-bottom: 1px solid #393939;
+  }
+
+  .analysis-footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+
+/* Dedicated analysis page typography */
+.analysis-nav button {
+  color: #171717 !important;
+}
+
+.analysis-nav strong {
+  color: #171717 !important;
+}
+
+.analysis-content h1,
+.analysis-content h2,
+.analysis-content h3 {
+  color: #171717 !important;
+}
+
+.analysis-content .section-label {
+  color: #c92525 !important;
+  font-size: 14px !important;
+  font-weight: 900;
+}
+
+.analysis-lead,
+.analysis-panel p {
+  color: #4f4a43 !important;
+}
+
+.analysis-footer {
+  background: #0d0c0b !important;
+  color: #e7dfd1 !important;
+}
+
+/* =========================================
+   BUILD A PLAN AROUND YOUR ACTUAL CAPACITY
+   ========================================= */
+
+.plan-panel {
+  background: #f4efe6 !important;
+  border: 1px solid rgba(23, 19, 15, 0.18) !important;
+  border-radius: 18px !important;
+  padding: 38px !important;
+  box-shadow: 0 12px 35px rgba(23, 19, 15, 0.08) !important;
+}
+
+/* All panel text */
+.plan-panel h2 {
+  color: #17130f !important;
+}
+
+.plan-panel > p:not(.section-label) {
+  color: #17130f !important;
+  line-height: 1.65 !important;
+}
+
+/* Red section label */
+.plan-panel .section-label {
+  color: #8f1d14 !important;
+  background: transparent !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
+}
+
+/* Four control boxes */
+.plan-fields {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  margin-top: 28px !important;
+}
+
+/* Each field */
+.plan-fields label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+  color: #8f1d14 !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+/* Select boxes */
+.plan-fields select {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 48px !important;
+  padding: 12px 14px !important;
+
+  background: #ebe4d8 !important;
+  color: #17130f !important;
+
+  border: 1px solid rgba(23, 19, 15, 0.22) !important;
+  border-radius: 9px !important;
+
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  outline: none !important;
+  appearance: auto !important;
+}
+
+.plan-fields select:focus {
+  border-color: #8f1d14 !important;
+  box-shadow: 0 0 0 2px rgba(143, 29, 20, 0.12) !important;
+}
+
+/* Generate button */
+.plan-panel > button {
+  margin-top: 24px !important;
+  background: #8f1d14 !important;
+  color: #f4efe6 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 14px 22px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+  .plan-fields {
+    grid-template-columns: 1fr !important;
+  }
+
+  .plan-panel {
+    padding: 28px !important;
+  }
+}
+
+
+/* =========================================
+   FINAL VISIBILITY FIX — PERSONALIZED PLAN
+   ========================================= */
+
+.analysis-page .plan-panel {
+  background: #f4efe6 !important;
+  color: #17130f !important;
+  border: 1px solid #17130f !important;
+  border-radius: 18px !important;
+}
+
+/* Heading */
+.analysis-page .plan-panel h2 {
+  color: #17130f !important;
+  background: transparent !important;
+}
+
+/* Description */
+.analysis-page .plan-panel p {
+  color: #17130f !important;
+  background: transparent !important;
+}
+
+/* Red section label */
+.analysis-page .plan-panel .section-label {
+  color: #8f1d14 !important;
+  background: transparent !important;
+}
+
+/* Labels above dropdowns */
+.analysis-page .plan-panel .plan-fields label {
+  color: #8f1d14 !important;
+  background: transparent !important;
+}
+
+/* Dropdown boxes */
+.analysis-page .plan-panel .plan-fields select {
+  background: #ebe4d8 !important;
+  color: #17130f !important;
+  border: 1px solid #17130f !important;
+  border-radius: 8px !important;
+}
+
+/* Dropdown option text */
+.analysis-page .plan-panel .plan-fields select option {
+  background: #f4efe6 !important;
+  color: #17130f !important;
+}
+
+/* Generate button */
+.analysis-page .plan-panel > button {
+  background: #8f1d14 !important;
+  color: #f4efe6 !important;
+  border: none !important;
+}
+
+/* Remove any accidental dark overlay */
+.analysis-page .plan-panel::before,
+.analysis-page .plan-panel::after {
+  display: none !important;
+  background: transparent !important;
+}
+
+
+/* Personalized plan hierarchy */
+.analysis-page .plan-panel .section-label {
+  color: #8f1d14 !important;
+}
+
+/* Main heading */
+.analysis-page .plan-panel h2 {
+  color: #2e7d32 !important;
+}
+
+/* Description — separate dark charcoal color */
+.analysis-page .plan-panel > p:not(.section-label) {
+  color: #4a4540 !important;
+  font-weight: 400 !important;
+}
+
+/* Field labels */
+.analysis-page .plan-panel .plan-fields label,
+.analysis-page .plan-panel .plan-fields label span {
+  color: #2e7d32 !important;
+}
+
+/* Dropdown values */
+.analysis-page .plan-panel .plan-fields select {
+  color: #17130f !important;
+}
+
+/* Button */
+.analysis-page .plan-panel > button {
+  background: #8f1d14 !important;
+  color: #f4efe6 !important;
+}
+
+
+/* =========================================
+   PERSONALIZED LEARNING PLAN — GREEN TEXT
+   ========================================= */
+
+/* Keep ONLY the section label red */
+.analysis-page .plan-panel .section-label {
+  color: #8f1d14 !important;
+}
+
+/* Everything else in the personalized plan = green */
+.analysis-page .plan-panel h2,
+.analysis-page .plan-panel p:not(.section-label),
+.analysis-page .plan-panel label,
+.analysis-page .plan-panel label span {
+  color: #2e7d32 !important;
+}
+
+/* Dropdown selected values remain readable */
+.analysis-page .plan-panel select {
+  color: #17130f !important;
+}
+
+/* Dropdown options */
+.analysis-page .plan-panel select option {
+  color: #17130f !important;
+  background: #f4efe6 !important;
+}
+
+/* Generate button text */
+.analysis-page .plan-panel > button {
+  color: #f4efe6 !important;
+}
+
+
+/* =========================================
+   FINAL PERSONALIZED LEARNING PLAN COLORS
+   ========================================= */
+
+.analysis-page .plan-panel {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Topic / section title */
+.analysis-page .plan-panel .section-label {
+  color: #8f1d14 !important;
+}
+
+/* Main topic heading = GREEN */
+.analysis-page .plan-panel h2 {
+  color: #2e7d32 !important;
+}
+
+/* Description = BLACK/DARK */
+.analysis-page .plan-panel > p:not(.section-label) {
+  color: #17130f !important;
+}
+
+/* Everything else = GREEN */
+.analysis-page .plan-panel .plan-fields label,
+.analysis-page .plan-panel .plan-fields label span {
+  color: #2e7d32 !important;
+}
+
+/* Dropdown boxes */
+.analysis-page .plan-panel .plan-fields select {
+  background: #000000 !important;
+  color: #8f1d14 !important;
+  border: 1px solid #8f1d14 !important;
+}
+
+/* Dropdown options */
+.analysis-page .plan-panel .plan-fields select option {
+  background: #000000 !important;
+  color: #8f1d14 !important;
+}
+
+/* Generate button */
+.analysis-page .plan-panel > button {
+  background: #8f1d14 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+

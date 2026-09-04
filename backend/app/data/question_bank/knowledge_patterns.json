@@ -1,0 +1,69 @@
+{
+  "version": "1.0",
+  "purpose": "Original question generation patterns. Source material identifies concepts; source wording is never reused.",
+  "patterns": [
+    {
+      "concept_family": "probability",
+      "pattern": "real_world_conditional_probability",
+      "question_type": "application",
+      "difficulty": "easy",
+      "contexts": ["factory", "hospital", "school", "transport"]
+    },
+    {
+      "concept_family": "probability",
+      "pattern": "bayes_diagnostic_update",
+      "question_type": "application",
+      "difficulty": "medium",
+      "contexts": ["medical screening", "fraud detection", "quality inspection"]
+    },
+    {
+      "concept_family": "probability",
+      "pattern": "independent_events",
+      "question_type": "application",
+      "difficulty": "medium",
+      "contexts": ["machines", "communication", "manufacturing"]
+    },
+    {
+      "concept_family": "sampling",
+      "pattern": "sampling_method_selection",
+      "question_type": "application",
+      "difficulty": "easy",
+      "contexts": ["household survey", "school survey", "business survey"]
+    },
+    {
+      "concept_family": "sampling",
+      "pattern": "sampling_bias",
+      "question_type": "reasoning",
+      "difficulty": "medium",
+      "contexts": ["online survey", "customer survey", "public opinion"]
+    },
+    {
+      "concept_family": "data_quality",
+      "pattern": "quality_dimension_scenario",
+      "question_type": "application",
+      "difficulty": "easy",
+      "contexts": ["government dashboard", "health statistics", "economic statistics"]
+    },
+    {
+      "concept_family": "official_statistics",
+      "pattern": "source_selection",
+      "question_type": "application",
+      "difficulty": "easy",
+      "contexts": ["government department", "population study", "economic monitoring"]
+    },
+    {
+      "concept_family": "statistical_process",
+      "pattern": "production_stage_reasoning",
+      "question_type": "reasoning",
+      "difficulty": "medium",
+      "contexts": ["census", "labour survey", "economic survey"]
+    },
+    {
+      "concept_family": "data_analysis",
+      "pattern": "interpretation_scenario",
+      "question_type": "application",
+      "difficulty": "medium",
+      "contexts": ["employment data", "inflation data", "education data"]
+    }
+  ]
+}

@@ -1,0 +1,609 @@
+/* =========================================================
+   PAPERSCOPE — COMPLETE ANALYSIS PAGE
+   Clean visual system: cream + black + red + green
+   ========================================================= */
+
+.analysis-page {
+  min-height: 100vh;
+  background: #f4efe6;
+  color: #17130f;
+  font-family: inherit;
+}
+
+/* =========================
+   NAVIGATION
+   ========================= */
+
+.analysis-nav {
+  min-height: 72px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f4efe6;
+  border-bottom: 1px solid rgba(23, 19, 15, 0.14);
+}
+
+.analysis-nav button {
+  border: 0;
+  background: transparent;
+  color: #17130f;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.analysis-nav strong {
+  color: #17130f;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   CONTENT
+   ========================= */
+
+.analysis-content {
+  width: min(1100px, 86%);
+  margin: 0 auto;
+  padding: 65px 0 80px;
+}
+
+.analysis-content > .section-label {
+  color: #8f1d14;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  margin: 0 0 12px;
+}
+
+.analysis-content > h1 {
+  color: #17130f;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1;
+  margin: 0;
+  font-weight: 900;
+}
+
+.analysis-lead {
+  max-width: 720px;
+  color: #4a4540;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 22px 0 42px;
+}
+
+/* =========================
+   SUMMARY CARDS
+   ========================= */
+
+.analysis-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid #17130f;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ebe4d8;
+  margin-bottom: 32px;
+}
+
+.analysis-summary > div {
+  min-height: 130px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  border-right: 1px solid rgba(23, 19, 15, 0.2);
+}
+
+.analysis-summary > div:last-child {
+  border-right: 0;
+}
+
+.analysis-summary span {
+  color: #8f1d14;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+}
+
+.analysis-summary strong {
+  color: #17130f;
+  font-size: 34px;
+  line-height: 1;
+}
+
+/* =========================
+   GENERAL PANELS
+   ========================= */
+
+.analysis-panel {
+  background: #ebe4d8;
+  border: 1px solid #17130f;
+  border-radius: 18px;
+  padding: 34px;
+  margin-bottom: 28px;
+}
+
+.analysis-panel > h2 {
+  color: #17130f;
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.analysis-panel > p {
+  color: #4a4540;
+  line-height: 1.7;
+}
+
+/* =========================
+   TABLE
+   ========================= */
+
+.analysis-table-wrap {
+  overflow-x: auto;
+  margin-top: 24px;
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+.analysis-table th {
+  text-align: left;
+  color: #8f1d14;
+  font-size: 10px;
+  letter-spacing: 1.3px;
+  font-weight: 900;
+  padding: 14px;
+  border-bottom: 2px solid #17130f;
+}
+
+.analysis-table td {
+  color: #17130f;
+  padding: 17px 14px;
+  border-bottom: 1px solid rgba(23, 19, 15, 0.16);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.analysis-table td:first-child {
+  font-weight: 900;
+}
+
+/* =========================
+   COMPETENCY GAPS
+   ========================= */
+
+.analysis-gap {
+  background: #f4efe6;
+  border: 1px solid rgba(23, 19, 15, 0.25);
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 14px;
+}
+
+.analysis-gap h3 {
+  color: #8f1d14;
+  margin: 0 0 7px;
+  font-size: 15px;
+}
+
+.analysis-gap p {
+  color: #17130f;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   PERSONALIZED LEARNING PLAN
+   ========================================================= */
+
+.plan-panel {
+  background: #ebe4d8;
+  border: 2px solid #17130f;
+  border-radius: 20px;
+  padding: 38px;
+  margin-top: 36px;
+  margin-bottom: 36px;
+  box-shadow: 0 12px 30px rgba(23, 19, 15, 0.08);
+}
+
+/* Red title */
+.plan-panel > .section-label {
+  color: #8f1d14;
+  background: transparent;
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Green heading */
+.plan-panel > h2 {
+  color: #2e7d32;
+  background: transparent;
+  margin: 0 0 12px;
+  font-size: 29px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+/* Description = dark charcoal */
+.plan-panel > p:not(.section-label) {
+  color: #4a4540;
+  background: transparent;
+  max-width: 850px;
+  margin: 0 0 28px;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* =========================
+   THREE CONTROL BOXES
+   ========================= */
+
+.plan-fields {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 28px 0 24px;
+}
+
+.plan-fields label {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: #2e7d32;
+  background: #f4efe6;
+  border: 1px solid rgba(23, 19, 15, 0.22);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.plan-fields select {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  box-sizing: border-box;
+  border: 1px solid #17130f;
+  border-radius: 8px;
+  background: #ebe4d8;
+  color: #17130f;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
+}
+
+.plan-fields select:focus {
+  border-color: #8f1d14;
+  box-shadow: 0 0 0 2px rgba(143, 29, 20, 0.12);
+}
+
+.plan-fields select option {
+  background: #f4efe6;
+  color: #17130f;
+}
+
+/* =========================
+   GENERATE BUTTON
+   ========================= */
+
+.plan-panel > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 4px;
+  margin-right: 12px;
+  margin-bottom: 10px;
+  padding: 13px 20px;
+  border: 0;
+  border-radius: 9px;
+  background: #8f1d14;
+  color: #f4efe6;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.plan-panel > button:hover {
+  transform: translateY(-1px);
+}
+
+.plan-panel > button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================
+   GENERATED PLAN
+   ========================================================= */
+
+.generated-plan {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 28px;
+  padding: 28px;
+  background: #f4efe6;
+  border: 2px solid #17130f;
+  border-radius: 16px;
+}
+
+/* Generated plan label */
+.generated-plan > .section-label {
+  color: #8f1d14;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0 0 10px;
+}
+
+/* Generated priority */
+.generated-plan > h2 {
+  color: #2e7d32;
+  font-size: 23px;
+  margin: 0 0 10px;
+  font-weight: 900;
+}
+
+/* Plan metadata */
+.generated-plan > p:not(.section-label) {
+  color: #4a4540;
+  margin: 0 0 22px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================
+   PLAN ITEMS
+   ========================= */
+
+.plan-items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.plan-items > div {
+  min-width: 0;
+  min-height: 125px;
+  box-sizing: border-box;
+  padding: 18px;
+  background: #ebe4d8;
+  border: 1px solid rgba(23, 19, 15, 0.25);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.plan-items span {
+  color: #8f1d14;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.plan-items strong {
+  color: #2e7d32;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* =========================
+   DOWNLOAD / IGOT AREA
+   ========================= */
+
+.generated-plan button,
+.plan-download,
+.igot-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-right: 10px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #17130f;
+  background: #17130f;
+  color: #f4efe6;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.generated-plan button:hover,
+.plan-download:hover,
+.igot-button:hover {
+  opacity: 0.88;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.analysis-footer {
+  background: #11100f;
+  color: #f4efe6;
+  padding: 34px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.analysis-footer span {
+  color: #f4efe6;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 850px) {
+
+  .analysis-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analysis-summary > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .analysis-summary > div:nth-child(-n+2) {
+    border-bottom: 1px solid rgba(23, 19, 15, 0.2);
+  }
+
+  .plan-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-items {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-panel {
+    padding: 28px;
+  }
+
+  .analysis-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .analysis-content {
+    width: 90%;
+    padding-top: 42px;
+  }
+
+  .analysis-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-summary > div {
+    border-right: 0;
+    border-bottom: 1px solid rgba(23, 19, 15, 0.2);
+  }
+
+  .analysis-summary > div:last-child {
+    border-bottom: 0;
+  }
+
+  .analysis-panel,
+  .plan-panel {
+    padding: 22px;
+  }
+
+  .plan-panel > h2 {
+    font-size: 24px;
+  }
+
+  .plan-panel > button {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+/* =====================================================
+   PERSONALIZED LEARNING PLAN — FINAL ONLY
+   ===================================================== */
+
+.analysis-page .plan-panel {
+  background: #f4efe6 !important;
+  color: #17130f !important;
+  border: 2px solid #17130f !important;
+}
+
+/* PERSONALIZED LEARNING PLAN */
+.analysis-page .plan-panel .section-label {
+  color: #8f1d14 !important;
+}
+
+/* Build around your actual capacity */
+.analysis-page .plan-panel h2 {
+  color: #2e7d32 !important;
+}
+
+/* Description */
+.analysis-page .plan-panel > p:not(.section-label) {
+  color: #4a4540 !important;
+}
+
+/* Three labels */
+.analysis-page .plan-panel .plan-fields label {
+  color: #2e7d32 !important;
+}
+
+/* Dropdown boxes */
+.analysis-page .plan-panel .plan-fields select {
+  background: #ebe4d8 !important;
+  color: #17130f !important;
+  border: 2px solid #17130f !important;
+}
+
+/* Dropdown options */
+.analysis-page .plan-panel .plan-fields select option {
+  background: #ebe4d8 !important;
+  color: #17130f !important;
+}
+
+/* Generate button */
+.analysis-page .plan-panel > button {
+  background: #8f1d14 !important;
+  color: #f4efe6 !important;
+}
+
+/* Generated plan */
+.analysis-page .plan-panel .generated-plan {
+  background: #ebe4d8 !important;
+  color: #17130f !important;
+  border: 2px solid #17130f !important;
+}
+
+/* Generated plan heading */
+.analysis-page .plan-panel .generated-plan h2 {
+  color: #2e7d32 !important;
+}
+
+/* Generated plan normal text */
+.analysis-page .plan-panel .generated-plan p {
+  color: #4a4540 !important;
+}
+
+/* Generated plan labels */
+.analysis-page .plan-panel .generated-plan span {
+  color: #8f1d14 !important;
+}
+
+/* Generated values */
+.analysis-page .plan-panel .generated-plan strong {
+  color: #2e7d32 !important;
+}
+
+/* Plan item boxes */
+.analysis-page .plan-panel .plan-items > div {
+  background: #f4efe6 !important;
+  color: #17130f !important;
+  border: 1px solid #17130f !important;
+}
